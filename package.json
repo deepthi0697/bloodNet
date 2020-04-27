@@ -1,0 +1,23 @@
+{
+  "name": "bloodnet-portfolio",
+  "version": "1.0.0",
+  "description": "An online web application which will show information about the required blood bank",
+  "main": "index.js",
+  "dependencies": {
+    "axios": "^0.19.2",
+    "concurrently": "^5.1.0",
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "materialize-css": "^1.0.0-rc.2",
+    "mongodb": "^3.5.5",
+    "mongoose": "^5.9.7",
+    "nodemon": "^2.0.3"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "concurrently \"nodemon index.js\" \"cd my-app && npm start\""
+  },
+  "author": "",
+  "license": "ISC"
+}
