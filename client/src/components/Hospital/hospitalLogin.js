@@ -1,7 +1,9 @@
 import React from 'react'
-// import data from '../../data'
+import data from '../../data'
 import axios from '../../config/axios'
 
+
+  
 class HospitalLogin extends React.Component{
     constructor(){
         super()
@@ -19,20 +21,6 @@ class HospitalLogin extends React.Component{
 
     handleSubmit = (e) => {
         e.preventDefault()
-        // const found = data.data.find(ele => {
-        //     return ele[4] === this.state.username
-        // })
-        // console.log(found)
-        // if(found === undefined){
-        //     alert("Incorrect username or password")
-        // } else {
-        //     if(found[0] === this.state.password){
-        //         alert('Successfully logged in')
-        //         this.props.history.push('/hospital/details')
-        //     } else {
-        //         alert("Incorrect username or password")
-        //     }
-        // }
         const formData = {
             username: this.state.username,
             password: this.state.password
@@ -43,8 +31,14 @@ class HospitalLogin extends React.Component{
                 window.alert(response.data.error)
             } else {
                 const token = response.data
+                const hospital = data.data.find(h => h.includes(this.state.username))
+
+                if(hospital){
+                    localStorage.setItem(`${hospital[0]} token`,token)
+                }
+                console.log(hospital)
                 localStorage.setItem('x-auth', token)
-                this.props.history.push('/hospital/details')
+                this.props.history.push(`/hospital/details/${hospital[0]}`)
             }
         })
         .catch((err) => {
@@ -54,19 +48,28 @@ class HospitalLogin extends React.Component{
     
     render(){
         return(
-            <div className = 'row'>
-                <div className='col s1'></div>
-                <div  className='col s8'>
-                    <h2>Hospital Login</h2>
-                    <form onSubmit =  {this.handleSubmit}>
-                        <label htmlFor='username'>Username</label>
-                        <input type='text' id='username' name='username' onChange={this.handleChange} value = {this.state.username}/>
+            <div className = 'row' >
+                <div  className='col s3'></div>
+                <div  className='col s2'></div>
+                <div className = 'col s6'>
+                        <blockquote>
+                        <h2 className="red-text text-darken-4">Hospital Login</h2>
+                        </blockquote>
+                            <form onSubmit =  {this.handleSubmit}>
+                                <div className = 'form-field'>
+                                    <label htmlFor='username'>Username</label>
+                                    <input type='text' id='username' name='username' onChange={this.handleChange} value = {this.state.username}/>
+                                </div>
 
-                        <label htmlFor='password'>Password</label>
-                        <input type='password' id='password' name='password' onChange={this.handleChange} value = {this.state.password}/>
+                                <div className = 'form-field'>
+                                    <label htmlFor='password'>Password</label>
+                                    <input type='password' id='password' name='password' onChange={this.handleChange} value = {this.state.password}/>
 
-                        <input type='submit'/>
-                    </form>
+                                </div>
+
+                                <input className = "center-align btn waves-effect waves-light" type='submit' value = 'Login'/>
+                            </form>
+                   
                 </div>
             </div>
         )

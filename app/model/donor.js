@@ -27,6 +27,11 @@ const donorSchema = new Schema({
     h_name: {
         type: String,
         required: true
+    },
+    createdAt : {
+        type: Date,
+        default: Date.now(),
+        required: true
     }
 })
 

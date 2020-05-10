@@ -1,5 +1,5 @@
 const User = require('../model/user')
-const data = require('../../my-app/src/data')
+const data = require('../../client/src/data')
 
 module.exports.login = (req, res) => {
     const username = req.body.username

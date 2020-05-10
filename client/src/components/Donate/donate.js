@@ -1,7 +1,21 @@
 import React from 'react'
 import data from '../../data'
 import axios from '../../config/axios'
-import popup from 'reactjs-popup'
+// import popup from 'reactjs-popup'
+import Background from './background.jpg'
+
+// import '../index.css'
+// import './donate.css'
+
+var sectionStyle = {
+    width: "100%",
+    height: "100vh",
+    backgroundPosition: "center",
+    backgroundRepeat: 'no-repeat',
+    backgroundSize: 'cover',
+    backgroundImage: `url(${Background})`
+  };
+  
 
 class Donate extends React.Component{
     constructor(){
@@ -16,6 +30,8 @@ class Donate extends React.Component{
             groups: ['A+', 'A-', 'AB+', 'AB-', 'B+', 'B-', 'O+', 'O-']
         }
     }
+
+  
 
     handleChange = (e) => {
         this.setState({
@@ -37,9 +53,11 @@ class Donate extends React.Component{
         .then((response) => {
             if(response.data.hasOwnProperty('errors')){
                 alert(response.data.message)
+                //M.toast({html: response.data.message, classes: 'rounded'});
             } else {
                 console.log(response.data)
-                alert('An email has been sent to the hospital.You will be contacted soon')
+               alert('An email has been sent to the hospital.You will be contacted soon')
+                //M.toast({html: 'An email has been sent to the hospital.You will be contacted soon', classes: 'rounded'});
             }
         })
         .catch((err) => {
@@ -47,6 +65,7 @@ class Donate extends React.Component{
         })
     }
     render(){
+        
         function repetition(arr, ele){
             const res = []
             for(let i = 0; i < arr.length; i++){
@@ -58,59 +77,66 @@ class Donate extends React.Component{
         }
         const states = repetition(data.data, 1)
         
+        
         return(
-            <div>
-                <form onSubmit = {this.handleSubmit}>
-                    <label htmlFor = 'name'>Enter your name</label>
-                    <input type = 'text' id = 'name' value = {this.state.name} onChange = {this.handleChange} name = 'name'/>
+            
+            <div className = 'row' style = {sectionStyle}> 
 
-                    <label htmlFor = 'age'>Enter your age</label>
-                    <input type = 'text' id = 'age' value = {this.state.age} onChange = {this.handleChange} name = 'age'/>
+                <div className = 'col s2'></div>
+                <div className = 'col s7'>
+                    <blockquote>
+                    <h2 className="z-depth-3 center-align">Donate </h2>
+                    </blockquote>
+                    <form onSubmit = {this.handleSubmit}>
+                        <label htmlFor = 'name'>Enter your name</label>
+                        <input type = 'text' id = 'name' value = {this.state.name} onChange = {this.handleChange} name = 'name'/>
 
+                        <label htmlFor = 'age'>Enter your age</label>
+                        <input type = 'text' id = 'age' value = {this.state.age} onChange = {this.handleChange} name = 'age'/>
 
+                        <label htmlFor = 'group'>Enter your blood group</label>
+                        <select className="browser-default" onChange = {this.handleChange} name = 'group'>
+                            <option value ='' disabled selected>Choose your option</option>
+                            {
+                                this.state.groups.map(group => {
+                                    return <option value = {group}>{group}</option>
+                                })
+                            }
+                        </select>
 
-                    <label htmlFor = 'group'>Enter your blood group</label>
-                    <select className="browser-default" onChange = {this.handleChange} name = 'group'>
-                        <option value ='' disabled selected>Choose your option</option>
+                        <label htmlFor = 'state'>Which state do you belong to?</label>
+                        <select className="browser-default"  onChange = {this.handleChange} name ='state'>
+                            <option value="" disabled selected>Choose your option</option>
                         {
-                            this.state.groups.map(group => {
-                                return <option value = {group}>{group}</option>
+                            states.map(state => {
+                                return <option value={state}>{state}</option>
                             })
                         }
-                    </select>
+                        </select>
 
-                    <label htmlFor = 'state'>Which state do you belong to?</label>
-                    <select className="browser-default"  onChange = {this.handleChange} name ='state'>
-                        <option value="" disabled selected>Choose your option</option>
-                    {
-                        states.map(state => {
-                               return <option value={state}>{state}</option>
-                        })
-                    }
-                    </select>
+                        <label htmlFor = 'city'>Which city do you belong to?</label>
+                        <select className="browser-default" onChange = {this.handleChange} name = 'city'>
+                                <option value="" disabled selected>Choose your option</option>
+                            {
+                                repetition(data.data.filter(arr => arr[1] == this.state.state),3).map(city => {
+                                    return <option value={city}>{city}</option>
+                                })
+                            }
+                        </select>
 
-                    <label htmlFor = 'city'>Which city do you belong to?</label>
-                    <select className="browser-default" onChange = {this.handleChange} name = 'city'>
-                            <option value="" disabled selected>Choose your option</option>
-                           {
-                               repetition(data.data.filter(arr => arr[1] == this.state.state),3).map(city => {
-                                   return <option value={city}>{city}</option>
-                               })
-                           }
-                    </select>
+                        <label htmlFor = 'h_name'>Select a bank to which you would like to Donate</label>
+                        <select className="browser-default" onChange = {this.handleChange} name = 'h_name'>
+                            <option value="" disabled selected>Choose your option</option> 
+                            {
+                                data.data.filter(bank => bank[3] === this.state.city).map(bank => {
+                                    return <option value = {bank[0]}>{bank[4]}</option>
+                                })
+                            }
+                        </select>
 
-                    <label htmlFor = 'h_name'>Select a bank to which you would like to Donate</label>
-                    <select className="browser-default" onChange = {this.handleChange} name = 'h_name'>
-                           <option value="" disabled selected>Choose your option</option> 
-                           {
-                               data.data.filter(bank => bank[3] === this.state.city).map(bank => {
-                                   return <option value = {bank[0]}>{bank[4]}</option>
-                               })
-                           }
-                    </select>
-
-                    <input type = 'submit'/>
-                </form>
+                        <input className = "center-align btn waves-effect waves-light" type = 'submit' value = 'Donate'/>
+                    </form>
+                </div>
             </div>
         )
     }
